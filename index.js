@@ -56,7 +56,13 @@ app.post("/create", async (req, res) => {
           <p>Thank you for registering with Remit API. We are glad to have you on board.</p>
           <p>Your api token is: ${createClient.id}</p>
           <p>Regards,</p>
-          <p>Remit API</p>`,
+          <p>Remit API</p>
+          <br>
+          <br>
+          <a href="https://remitapi.vercel.app/delete/${createClient.id}">Delete this token</a>
+          <br>
+          <p>Disclaimer: This is an auto-generated email. Please do not reply to this email.</p>
+          `,
       };
       transporter.sendMail(options, function (err, info) {
         if (err) {
