@@ -39,31 +39,35 @@ app.post("/send/:id", async (req, res) => {
   try {
     const { client } = await clientGraph.request(query);
 
-    var transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: client.email,
-        pass: client.password,
-      },
-    });
+    if (client.id) {
+      var transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: client.email,
+          pass: client.password,
+        },
+      });
 
-    const mailOptions = {
-      from: `${client.name} <${client.email}>`,
-      to: to,
-      subject: subject || "No Subject",
-      text: text || "",
-      html: html || "",
-    };
+      const mailOptions = {
+        from: `${client.name} <${client.email}>`,
+        to: to,
+        subject: subject || "No Subject",
+        text: text || "",
+        html: html || "",
+      };
 
-    transporter.sendMail(mailOptions, function (err, info) {
-      console.log("Sending mail");
-      if (err) {
-        console.log(err);
-        res.send("Error");
-      } else {
-        res.send("Success");
-      }
-    });
+      transporter.sendMail(mailOptions, function (err, info) {
+        console.log("Sending mail");
+        if (err) {
+          console.log(err);
+          res.send("Error");
+        } else {
+          res.send("Success");
+        }
+      });
+    } else {
+      res.send("Invalid Token");
+    }
   } catch (error) {
     res.send("Invalid Token");
   }
