@@ -80,9 +80,55 @@ app.post("/create", async (req, res) => {
       }
     }
   `;
-  console.log(query);
+
+  // create client
   const { createClient } = await clientGraph.request(query);
-  res.send(createClient);
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  // send email confirmation
+
+  const mailOptions = {
+    from: `Remit Token <${process.env.EMAIL}>`,
+    to: email,
+    subject: "Welcome to Remit API",
+    html: `<h1>Welcome to Remit API</h1>
+      <p>Here is your token: ${createClient.id}</p>
+      <p>Use this token to send emails using Remit API</p>
+      <p>Thank you</p>
+      
+      <a href="https://remitapi.vercel.app/delete/${createClient.id}">Delete Token</a>`,
+  };
+
+  transporter.sendMail(mailOptions, function (err, info) {
+    console.log("Sending mail");
+    if (err) {
+      console.log(err);
+      res.send("Error");
+    } else {
+      res.send("Success");
+    }
+  });
+  res.send("Success");
+});
+
+app.get("/delete/:clientId", async (req, res) => {
+  const { clientId } = req.params;
+
+  const query = gql`
+    mutation MyMutation {
+      deleteClient(where: { id: "${clientId}" }) {
+        id
+      }
+    }
+  `;
+  const { deleteClient } = await clientGraph.request(query);
+  res.send("Token deleted successfully!");
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
