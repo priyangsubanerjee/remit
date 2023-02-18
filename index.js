@@ -77,7 +77,7 @@ app.post("/create", async (req, res) => {
   }
 });
 
-app.post("/send:id", async (req, res) => {
+app.post("/send/:id", async (req, res) => {
   const { id } = req.params;
   const { to, html, text, subject } = req.body;
 
@@ -114,9 +114,7 @@ app.post("/send:id", async (req, res) => {
           console.log(err);
           res.status(400).send({ message: "Email not sent !" });
         } else {
-          res
-            .status(200)
-            .send({ message: "User created & email sent successfully" });
+          res.status(200).send({ message: "Email sent successfully" });
         }
       });
     } else {
