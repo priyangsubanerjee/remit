@@ -17,8 +17,17 @@ gmailForm.addEventListener("submit", (e) => {
       },
       {
         headers: {
-          "access-control-allow-credentials": true,
-          "access-control-allow-origin": "https://remitapi.vercel.app",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+          "Access-Control-Allow-Headers":
+            "Content-Type, Authorization, Content-Length, X-Requested-With",
+          "Access-Control-Allow-Credentials": "true",
+          "Access-Control-Max-Age": "86400",
+          "Access-Control-Expose-Headers": "Content-Length, X-JSON",
+          "Access-Control-Allow-Headers":
+            "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding",
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE",
         },
       }
     )
