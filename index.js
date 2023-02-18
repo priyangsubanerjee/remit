@@ -10,17 +10,9 @@ const { gql, GraphQLClient } = require("graphql-request");
 
 dotenv.config();
 
-const client = new GraphQLClient(process.env.GRAPH_API, {
+const clientGraph = new GraphQLClient(process.env.GRAPH_API, {
   headers: {
     authorization: "Bearer " + process.env.GRAPH_TOKEN,
-  },
-});
-
-var transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "virtualbasecorp@gmail.com",
-    pass: "wvqhwgbjfpwwirry",
   },
 });
 
@@ -35,16 +27,37 @@ app.use(bodyParser.json());
 
 app.use("/", express.static(path.join(__dirname, "public")));
 
-app.post("/send/:clientId", (req, res) => {
+app.post("/send/:clientId", async (req, res) => {
   const { clientId } = req.params;
-  const { name, subject, text, to, html } = req.body;
+
+  const query = gql`
+    query MyQuery {
+      client(where: { id: "${clientId}" }) {
+        name
+        password
+        email
+      }
+    }
+  `;
+  const { client } = await clientGraph.request(query);
+
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: client.email,
+      pass: client.password,
+    },
+  });
+
+  const { subject, text, to, html } = req.body;
   const mailOptions = {
-    from: `Secret confession <virtualbasecorp@gmail.com>`,
+    from: `${client.name} <${client.email}>`,
     to: to,
     subject: subject,
     text: text,
     html: html,
   };
+
   transporter.sendMail(mailOptions, function (err, info) {
     console.log("Sending mail");
     if (err) {
@@ -57,15 +70,16 @@ app.post("/send/:clientId", (req, res) => {
 });
 
 app.post("/create", async (req, res) => {
-  const { email, pasword, name } = req.body;
+  const { email, password, name } = await req.body;
   const query = gql`
     mutation MyMutation {
-      createClient(data: { name: "", email: "", password: "" }) {
+      createClient(data: { name: "${name}", email: "${email}", password: "${password}" }) {
         id
       }
     }
   `;
-  const { createClient } = await client.request(query);
+  console.log(query);
+  const { createClient } = await clientGraph.request(query);
   res.send(createClient);
 });
 
