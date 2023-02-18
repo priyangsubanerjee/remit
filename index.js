@@ -1,12 +1,12 @@
-const express = require("express");
-const app = express();
-const port = 3000;
-const cors = require("cors");
+const { gql, GraphQLClient } = require("graphql-request");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
-const path = require("path");
+const express = require("express");
 const dotenv = require("dotenv");
-const { gql, GraphQLClient } = require("graphql-request");
+const path = require("path");
+const cors = require("cors");
+const app = express();
+const port = 3000 || process.env.PORT;
 
 dotenv.config();
 
@@ -22,10 +22,10 @@ app.use(
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
-
 app.use(bodyParser.json());
-
 app.use("/", express.static(path.join(__dirname, "public")));
+
+// POST /send/:clientId to send email using remit API
 
 app.post("/send/:clientId", async (req, res) => {
   const { clientId } = req.params;
@@ -53,9 +53,9 @@ app.post("/send/:clientId", async (req, res) => {
   const mailOptions = {
     from: `${client.name} <${client.email}>`,
     to: to,
-    subject: subject,
-    text: text,
-    html: html,
+    subject: subject || "No Subject",
+    text: text || "",
+    html: html || "",
   };
 
   transporter.sendMail(mailOptions, function (err, info) {
@@ -68,6 +68,8 @@ app.post("/send/:clientId", async (req, res) => {
     }
   });
 });
+
+// POST /create to create a new client using remit API
 
 app.post("/create", async (req, res) => {
   const { email, password, name } = await req.body;
