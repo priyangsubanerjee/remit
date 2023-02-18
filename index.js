@@ -132,8 +132,10 @@ app.get("/delete/:id", async (req, res) => {
             }
           }
         `;
-    await clientGraph.request(query);
-    res.send("Token deleted successfully!");
+    const { deleteClient } = await clientGraph.request(query);
+    deleteClient.id
+      ? res.send("Token deleted successfully!")
+      : res.send("Invalid Token");
   } catch (error) {
     res.send("Invalid Token"); // runs if token is invalid
   }
