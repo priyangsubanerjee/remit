@@ -145,7 +145,7 @@ app.get("/delete/:id", async (req, res) => {
   try {
     const { deleteClient } = await graphClient.request(query);
     if (deleteClient.id) {
-      res.status(200).send({ message: "Token deleted successfully" });
+      res.sendFile(path.join(__dirname, "public", "success.html"));
     } else {
       res.status(400).send({ message: "Token not found" });
     }
@@ -154,6 +154,8 @@ app.get("/delete/:id", async (req, res) => {
     res.status(400).send({ message: "Token not found" });
   }
 });
+
+app.get("/success", (req, res) => {});
 
 app.listen(port, () => {
   console.log(`Node app listening at http://localhost:${port}`);

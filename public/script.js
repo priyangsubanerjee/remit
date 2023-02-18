@@ -27,6 +27,10 @@ gmailForm.addEventListener("submit", (e) => {
       }
     )
     .then((res) => {
+      gmailEmail.value = "";
+      gmailName.value = "";
+      gmailAppPassword.value = "";
+
       if (res.status === 200) {
         alert("Api token sent to your email !");
       } else {
