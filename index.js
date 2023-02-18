@@ -16,63 +16,64 @@ const clientGraph = new GraphQLClient(process.env.GRAPH_API, {
   },
 });
 
-app.use(
-  cors({
-    origin: "*",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  })
-);
+app.use(cors());
 app.use(bodyParser.json());
 app.use("/", express.static(path.join(__dirname, "public")));
 
 // POST /send/:clientId to send email using remit API
 
-app.post("/send/:clientId", async (req, res) => {
-  const { clientId } = req.params;
+app.post("/send/:id", async (req, res) => {
+  const { id } = req.params;
+  const { subject, text, to, html } = req.body;
 
   const query = gql`
     query MyQuery {
-      client(where: { id: "${clientId}" }) {
+      client(where: { id: "${id}" }) {
         name
         password
         email
       }
     }
   `;
-  const { client } = await clientGraph.request(query);
 
-  var transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: client.email,
-      pass: client.password,
-    },
-  });
+  try {
+    const { client } = await clientGraph.request(query);
 
-  const { subject, text, to, html } = req.body;
-  const mailOptions = {
-    from: `${client.name} <${client.email}>`,
-    to: to,
-    subject: subject || "No Subject",
-    text: text || "",
-    html: html || "",
-  };
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: client.email,
+        pass: client.password,
+      },
+    });
 
-  transporter.sendMail(mailOptions, function (err, info) {
-    console.log("Sending mail");
-    if (err) {
-      console.log(err);
-      res.send("Error");
-    } else {
-      res.send("Success");
-    }
-  });
+    transporter.sendMail(mailOptions, function (err, info) {
+      console.log("Sending mail");
+      if (err) {
+        console.log(err);
+        res.send("Error");
+      } else {
+        res.send("Success");
+      }
+    });
+
+    const mailOptions = {
+      from: `${client.name} <${client.email}>`,
+      to: to,
+      subject: subject || "No Subject",
+      text: text || "",
+      html: html || "",
+    };
+  } catch (error) {
+    res.send("Invalid Token");
+  }
 });
 
 // POST /create to create a new client using remit API
 
 app.post("/create", async (req, res) => {
   const { email, password, name } = await req.body;
+
   const query = gql`
     mutation MyMutation {
       createClient(data: { name: "${name}", email: "${email}", password: "${password}" }) {
@@ -82,6 +83,7 @@ app.post("/create", async (req, res) => {
   `;
 
   // create client
+
   const { createClient } = await clientGraph.request(query);
   var transporter = nodemailer.createTransport({
     service: "gmail",
@@ -117,18 +119,22 @@ app.post("/create", async (req, res) => {
   res.send("Success");
 });
 
-app.get("/delete/:clientId", async (req, res) => {
-  const { clientId } = req.params;
+app.get("/delete/:id", async (req, res) => {
+  const { id } = req.params;
 
-  const query = gql`
-    mutation MyMutation {
-      deleteClient(where: { id: "${clientId}" }) {
-        id
-      }
-    }
-  `;
-  const { deleteClient } = await clientGraph.request(query);
-  res.send("Token deleted successfully!");
+  try {
+    const query = gql`
+          mutation MyMutation {
+            deleteClient(where: { id: "${id}" }) {
+              id
+            }
+          }
+        `;
+    await clientGraph.request(query);
+    res.send("Token deleted successfully!");
+  } catch (error) {
+    res.send("Invalid Token"); // runs if token is invalid
+  }
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
