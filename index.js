@@ -132,6 +132,29 @@ app.post("/send/:id", async (req, res) => {
   }
 });
 
+app.get("/delete/:id", async (req, res) => {
+  const { id } = req.params;
+  const query = gql`
+        mutation MyMutation {
+        deleteClient(where: {id: "${id}"}) {
+            id
+        }
+        }
+    `;
+
+  try {
+    const { deleteClient } = await graphClient.request(query);
+    if (deleteClient.id) {
+      res.status(200).send({ message: "Token deleted successfully" });
+    } else {
+      res.status(400).send({ message: "Token not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: "Token not found" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Node app listening at http://localhost:${port}`);
 });
