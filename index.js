@@ -17,7 +17,12 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.post("/create", (req, res) => {
-  res.send("Hello World!");
+  const { name, email, password } = req.body;
+  res.json({
+    name,
+    email,
+    password,
+  });
 });
 
 app.listen(port, () => {
