@@ -47,6 +47,14 @@ app.post("/send/:id", async (req, res) => {
       },
     });
 
+    const mailOptions = {
+      from: `${client.name} <${client.email}>`,
+      to: to,
+      subject: subject || "No Subject",
+      text: text || "",
+      html: html || "",
+    };
+
     transporter.sendMail(mailOptions, function (err, info) {
       console.log("Sending mail");
       if (err) {
@@ -56,14 +64,6 @@ app.post("/send/:id", async (req, res) => {
         res.send("Success");
       }
     });
-
-    const mailOptions = {
-      from: `${client.name} <${client.email}>`,
-      to: to,
-      subject: subject || "No Subject",
-      text: text || "",
-      html: html || "",
-    };
   } catch (error) {
     res.send("Invalid Token");
   }

@@ -8,18 +8,86 @@
     <link rel="stylesheet" href="./index.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="shortcut icon" href="./images/logo.png" type="image/x-icon" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.3/axios.js"
+      integrity="sha512-uap0bTaa/bPjLtLVuiWS+qak4SJrOPcdfVzUdrrE7LgvtMlkV6DeiBH7Rgt7B+74M3crOr3QdTX3gCTMMRVzZA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="./script.js" defer></script>
   </head>
   <body>
     <div class="loader"></div>
-    <nav class="py-1 px-10 flex items-center border-b">
-      <img src="./images/logo.png" class="h-14 mr-3" alt="" />
+    <nav class="py-1 px-5 lg:px-10 flex items-center border-b">
+      <img src="./images/logo.png" class="h-12 mr-3" alt="" />
       <h1 class="text-2xl font-bold text-slate-700">Remit</h1>
-      <ul class="flex space-x-6 text-zinc-600 ml-10 text-sm">
+      <ul class="hidden lg:flex space-x-6 text-zinc-600 ml-10 text-sm">
         <li>About</li>
         <li>Endpoints</li>
         <li>Documentation</li>
         <li>Blog</li>
       </ul>
     </nav>
+    <div class="flex items-center justify-center mt-10 px-5 lg:px-0">
+      <form class="p-10 bg-zinc-100 lg:w-[550px] gmailForm">
+        <div>
+          <h1 class="text-3xl font-bold">Generate Remit API Token</h1>
+          <h2 class="text-sm text-zinc-700 mt-2 leading-6">
+            <a class="underline text-orange-600" href="">Follow this link</a>
+            for SMTP based email clients.
+          </h2>
+        </div>
+        <div class="mt-10">
+          <label class="block text-zinc-600 font-semibold text-sm" for=""
+            >Name</label
+          >
+          <input
+            class="bg-white border rounded-md w-full px-3 py-3 mt-2 gmailName"
+            type="text"
+            placeholder="Enter your name"
+            required
+            value="ASRO IT"
+          />
+        </div>
+        <div class="mt-5">
+          <label class="block text-zinc-600 font-semibold text-sm" for=""
+            >Email</label
+          >
+          <input
+            class="bg-white border rounded-md w-full px-3 py-3 mt-2 gmailEmail"
+            type="email"
+            placeholder="Enter your email"
+            required
+            value="virtualbasecorp@gmail.com"
+          />
+        </div>
+        <div class="mt-5">
+          <label class="block text-zinc-600 font-semibold text-sm" for=""
+            >App password</label
+          >
+          <input
+            class="bg-white border rounded-md w-full px-3 py-3 mt-2 gmailAppPassword"
+            type="password"
+            placeholder="Enter your app password"
+            required
+            value="wvqhwgbjfpwwirry"
+          />
+        </div>
+        <div class="text-xs my-5">
+          <p class="leading-6">
+            You'll receive an email with your API token. Please check your spam
+            folder if you don't see it in your inbox.
+          </p>
+        </div>
+        <div>
+          <button
+            type="submit"
+            class="w-full bg-black p-4 text-sm text-white rounded-md"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
   </body>
 </html>
