@@ -88,6 +88,8 @@ app.post("/create", async (req, res) => {
 
   const { createClient } = await clientGraph.request(query);
 
+  console.log(createClient.id);
+
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
