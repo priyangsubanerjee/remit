@@ -27,9 +27,13 @@ gmailForm.addEventListener("submit", (e) => {
       }
     )
     .then((res) => {
+      if (res.status === 200) {
+        alert("Api token sent to your email !");
+      } else {
+        alert("Something went wrong !");
+      }
       console.log(res);
       loader.classList.remove("active");
-      alert("Api token sent to your email !");
     })
     .catch((err) => {
       console.log(err);

@@ -77,6 +77,57 @@ app.post("/create", async (req, res) => {
   }
 });
 
+app.post("/send:id", async (req, res) => {
+  const { id } = req.params;
+  const { to, html, text, subject } = req.body;
+
+  const query = gql`
+    query MyQuery {
+      client(where: { id: "${id}" }) {
+        name
+        password
+        email
+        id
+      }
+    }
+  `;
+
+  try {
+    const { client } = await graphClient.request(query);
+    if (client.id) {
+      var transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: client.email,
+          pass: client.password,
+        },
+      });
+      var options = {
+        from: `${client.name} <${client.email}>`,
+        to,
+        subject,
+        html,
+        text,
+      };
+      transporter.sendMail(options, function (err, info) {
+        if (err) {
+          console.log(err);
+          res.status(400).send({ message: "Email not sent !" });
+        } else {
+          res
+            .status(200)
+            .send({ message: "User created & email sent successfully" });
+        }
+      });
+    } else {
+      res.status(400).send({ message: "Token not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: "Token not found" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Node app listening at http://localhost:${port}`);
 });
