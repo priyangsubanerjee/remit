@@ -8,21 +8,11 @@ gmailForm.addEventListener("submit", (e) => {
   e.preventDefault();
   loader.classList.add("active");
   axios
-    .post(
-      "/create",
-      {
-        name: gmailName.value,
-        email: gmailEmail.value,
-        password: gmailAppPassword.value,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-        },
-      }
-    )
+    .post("/create", {
+      name: gmailName.value,
+      email: gmailEmail.value,
+      password: gmailAppPassword.value,
+    })
     .then((res) => {
       console.log(res);
       loader.classList.remove("active");
