@@ -1,12 +1,12 @@
 const { gql, GraphQLClient } = require("graphql-request");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
-const port = 3000 || process.env.PORT;
 const express = require("express");
 const dotenv = require("dotenv");
 const path = require("path");
 const cors = require("cors");
 const app = express();
+const port = 3000 || process.env.PORT;
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ const clientGraph = new GraphQLClient(process.env.GRAPH_API, {
 app.use(
   cors({
     origin: "*",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
 app.use(bodyParser.json());
@@ -43,35 +43,31 @@ app.post("/send/:id", async (req, res) => {
 
   const { client } = await clientGraph.request(query);
 
-  if (client.id !== null) {
-    var transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: client.email,
-        pass: client.password,
-      },
-    });
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: client.email,
+      pass: client.password,
+    },
+  });
 
-    const mailOptions = {
-      from: `${client.name} <${client.email}>`,
-      to: to,
-      subject: subject || "No Subject",
-      text: text || "",
-      html: html || "",
-    };
+  const mailOptions = {
+    from: `${client.name} <${client.email}>`,
+    to: to,
+    subject: subject || "No Subject",
+    text: text || "",
+    html: html || "",
+  };
 
-    transporter.sendMail(mailOptions, function (err, info) {
-      console.log("Sending mail");
-      if (err) {
-        console.log(err);
-        res.send("Error");
-      } else {
-        res.send("Success");
-      }
-    });
-  } else {
-    res.send("Invalid Token");
-  }
+  transporter.sendMail(mailOptions, function (err, info) {
+    console.log("Sending mail");
+    if (err) {
+      console.log(err);
+      res.send("Error");
+    } else {
+      res.send("Success");
+    }
+  });
 });
 
 // POST /create to create a new client using remit API
@@ -88,6 +84,7 @@ app.post("/create", async (req, res) => {
   `;
 
   // create client
+
   const { createClient } = await clientGraph.request(query);
   var transporter = nodemailer.createTransport({
     service: "gmail",
@@ -111,8 +108,6 @@ app.post("/create", async (req, res) => {
       <a href="https://remitapi.vercel.app/delete/${createClient.id}">Delete Token</a>`,
   };
 
-  // send email
-
   transporter.sendMail(mailOptions, function (err, info) {
     console.log("Sending mail");
     if (err) {
@@ -122,7 +117,6 @@ app.post("/create", async (req, res) => {
       res.send("Success");
     }
   });
-  res.send("Success");
 });
 
 app.get("/delete/:id", async (req, res) => {
@@ -136,10 +130,8 @@ app.get("/delete/:id", async (req, res) => {
             }
           }
         `;
-    const { deleteClient } = await clientGraph.request(query);
-    deleteClient.id
-      ? res.send("Token deleted successfully!")
-      : res.send("Invalid Token");
+    await clientGraph.request(query);
+    res.send("Token deleted successfully!");
   } catch (error) {
     res.send("Invalid Token"); // runs if token is invalid
   }
