@@ -12,9 +12,7 @@ dotenv.config();
 
 const corsOpts = {
   origin: "*",
-
   methods: ["GET", "POST"],
-
   allowedHeaders: ["Content-Type"],
 };
 
@@ -89,6 +87,7 @@ app.post("/create", async (req, res) => {
   // create client
 
   const { createClient } = await clientGraph.request(query);
+
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -115,11 +114,12 @@ app.post("/create", async (req, res) => {
     console.log("Sending mail");
     if (err) {
       console.log(err);
-      res.send("Error");
+      res.send(JSON.stringify(err));
     } else {
       res.send("Success");
     }
   });
+  res.send("Success");
 });
 
 app.get("/delete/:id", async (req, res) => {
