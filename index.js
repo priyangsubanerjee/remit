@@ -1,12 +1,12 @@
 const { gql, GraphQLClient } = require("graphql-request");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
+const port = 3000 || process.env.PORT;
 const express = require("express");
 const dotenv = require("dotenv");
 const path = require("path");
 const cors = require("cors");
 const app = express();
-const port = 3000 || process.env.PORT;
 
 dotenv.config();
 
@@ -106,6 +106,8 @@ app.post("/create", async (req, res) => {
       
       <a href="https://remitapi.vercel.app/delete/${createClient.id}">Delete Token</a>`,
   };
+
+  // send email
 
   transporter.sendMail(mailOptions, function (err, info) {
     console.log("Sending mail");
