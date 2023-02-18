@@ -39,7 +39,7 @@ app.post("/send/:id", async (req, res) => {
   try {
     const { client } = await clientGraph.request(query);
 
-    if (client.id) {
+    if (client.id !== null) {
       var transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
