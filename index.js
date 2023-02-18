@@ -16,7 +16,12 @@ const clientGraph = new GraphQLClient(process.env.GRAPH_API, {
   },
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://remitapi.vercel.app",
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 app.use("/", express.static(path.join(__dirname, "public")));
 
