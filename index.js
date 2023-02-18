@@ -10,18 +10,21 @@ const port = 3000 || process.env.PORT;
 
 dotenv.config();
 
+const corsOpts = {
+  origin: "*",
+
+  methods: ["GET", "POST"],
+
+  allowedHeaders: ["Content-Type"],
+};
+
 const clientGraph = new GraphQLClient(process.env.GRAPH_API, {
   headers: {
     authorization: "Bearer " + process.env.GRAPH_TOKEN,
   },
 });
 
-app.use(
-  cors({
-    origin: "https://remitapi.vercel.app",
-    credentials: true,
-  })
-);
+app.use(cors(corsOpts));
 app.use(bodyParser.json());
 app.use("/", express.static(path.join(__dirname, "public")));
 
