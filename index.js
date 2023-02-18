@@ -87,42 +87,45 @@ app.post("/create", async (req, res) => {
   `;
 
   // create client
+  try {
+    const { createClient } = await clientGraph.request(query);
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-  const { createClient } = await clientGraph.request(query);
-  var transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+    // send email confirmation
 
-  // send email confirmation
-
-  const mailOptions = {
-    from: `Remit Token <${process.env.EMAIL}>`,
-    to: email,
-    subject: "Welcome to Remit API",
-    html: `<h1>Welcome to Remit API</h1>
+    const mailOptions = {
+      from: `Remit Token <${process.env.EMAIL}>`,
+      to: email,
+      subject: "Welcome to Remit API",
+      html: `<h1>Welcome to Remit API</h1>
       <p>Here is your token: ${createClient.id}</p>
       <p>Use this token to send emails using Remit API</p>
       <p>Thank you</p>
       
       <a href="https://remitapi.vercel.app/delete/${createClient.id}">Delete Token</a>`,
-  };
+    };
 
-  // send email
+    // send email
 
-  transporter.sendMail(mailOptions, function (err, info) {
-    console.log("Sending mail");
-    if (err) {
-      console.log(err);
-      res.send("Error");
-    } else {
-      res.send("Success");
-    }
-  });
-  res.send("Success");
+    transporter.sendMail(mailOptions, function (err, info) {
+      console.log("Sending mail");
+      if (err) {
+        console.log(err);
+        res.send("Error");
+      } else {
+        res.send("Success");
+      }
+    });
+    res.send("Success");
+  } catch (error) {
+    res.send("Error");
+  }
 });
 
 app.get("/delete/:id", async (req, res) => {

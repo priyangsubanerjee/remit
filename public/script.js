@@ -21,6 +21,6 @@ gmailForm.addEventListener("submit", (e) => {
     .catch((err) => {
       console.log(err);
       loader.classList.remove("active");
-      alert("Error occured !");
+      alert(err);
     });
 });
