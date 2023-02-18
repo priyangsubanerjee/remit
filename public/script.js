@@ -8,11 +8,20 @@ gmailForm.addEventListener("submit", (e) => {
   e.preventDefault();
   loader.classList.add("active");
   axios
-    .post("/create", {
-      name: gmailName.value,
-      email: gmailEmail.value,
-      password: gmailAppPassword.value,
-    })
+    .post(
+      "/create",
+      {
+        name: gmailName.value,
+        email: gmailEmail.value,
+        password: gmailAppPassword.value,
+      },
+      {
+        headers: {
+          "access-control-allow-credentials": true,
+          "access-control-allow-origin": "https://remitapi.vercel.app",
+        },
+      }
+    )
     .then((res) => {
       console.log(res);
       loader.classList.remove("active");
