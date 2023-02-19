@@ -49,35 +49,35 @@
   </head>
   <body class="pb-10">
     <nav class="py-1 px-5 lg:px-10 flex items-center border-b">
-      <img src="./images/logo.png" class="h-12 mr-3" alt="" />
-      <h1 class="text-2xl font-bold text-slate-700">Remit</h1>
-      <ul class="hidden lg:flex space-x-6 text-zinc-600 ml-10 text-sm">
+      <img src="./images/logo.png" class="h-9 lg:h-12 mr-3" alt="" />
+      <h1 class="text-xl lg:text-2xl font-bold text-slate-700">Remit</h1>
+      <ul class="flex space-x-6 text-zinc-600 lg:ml-10 ml-auto text-sm">
         <li><a href="/">Generate</a></li>
         <li class="text-orange-600">Documentation</li>
       </ul>
     </nav>
-    <div class="mt-10 px-5 lg:px-10 w-full">
+    <div class="mt-10 px-5 lg:px-10 w-full overflow-hidden">
       <h1 class="text-xl font-bold">Remit API</h1>
-      <p class="lg:w-[700px] mt-5 leading-7">
+      <p class="lg:w-[700px] w-full mt-5 leading-7">
         Remit is a simple api that allows you to send emails from your node js
         application. It uses your Gmail account to send emails. You can use it
         to send emails to your users, send notifications, send verification
         emails, etc. It is very easy to use and it is free.
       </p>
       <h1 class="text-xl font-bold mt-10">How to use?</h1>
-      <p class="w-[700px] mt-5 leading-7">
+      <p class="w-[700px] w-full mt-5 leading-7">
         To use Remit, you need to generate an API token. You can generate an API
         token by entering your Gmail credentials on the homepage. You can then
         use the API token to send emails from your node js application. View the
         documentation for more information.
       </p>
       <h1 class="text-xl font-bold mt-10">What is app password?</h1>
-      <p class="w-[700px] mt-5 leading-7">
+      <p class="w-[700px] w-full mt-5 leading-7">
         App password is a password that you can generate from your Gmail account
         to allow third party applications to access your Gmail account. You can
         generate an app password by following the steps below:
       </p>
-      <ol class="list-decimal list-inside w-[700px] mt-5 leading-7">
+      <ol class="list-decimal list-inside w-full lg:w-[700px] mt-5 leading-7">
         <li>Go to your Gmail account</li>
         <li>Click on your profile picture</li>
         <li>Click on Manage your Google Account</li>
@@ -88,14 +88,14 @@
         <li>Copy the app password and use it to generate an API token</li>
       </ol>
       <h1 class="text-xl font-bold mt-10">How to send emails?</h1>
-      <p class="w-[700px] mt-5 leading-7">
+      <p class="lg:w-[700px] w-full mt-5 leading-7">
         To send emails, you need to make a POST request to the /send endpoint
         with the following parameters:
       </p>
       <img src="./images/send.jpeg" class="lg:w-1/2 w-full mt-10" alt="" />
 
       <h1 class="text-xl font-bold mt-10">How to delete an API token?</h1>
-      <p class="w-[700px] mt-5 leading-7">
+      <p class="lg:w-[700px] w-full mt-5 leading-7">
         To delete an API token, you need to make a GET request to the /delete
         endpoint with the following parameters:
       </p>
