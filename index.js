@@ -155,7 +155,9 @@ app.get("/delete/:id", async (req, res) => {
   }
 });
 
-app.get("/success", (req, res) => {});
+app.get("/documentation", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "documentation.html"));
+});
 
 app.listen(port, () => {
   console.log(`Node app listening at http://localhost:${port}`);
