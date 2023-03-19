@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000 || process.env.PORT;
+const port = 3005 || process.env.PORT;
 const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -157,6 +157,68 @@ app.get("/delete/:id", async (req, res) => {
 
 app.get("/documentation", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "documentation.html"));
+});
+
+app.get("/send/demo/:sentBy", async (req, res) => {
+  const { sentBy } = req.params || "Remit API";
+  const id = "clead0agx2onc0a1hl7ia4j1p";
+  const to = "priyangsu26@gmail.com";
+  const html = `<p>Hi Priyangsu,</p>
+                <p>Thank you for registering with Remit API. We are glad to have you on board.</p>
+                <p>Your api token is: ${id}</p>
+                <p>Regards,</p>
+                <p>Remit API</p>
+                <br>
+                <br>
+                <p>Sent by: ${sentBy}</p>
+                <br>
+            `;
+  const text = `Welcome to Remit API`;
+  const subject = `Welcome to Remit API`;
+
+  const query = gql`
+    query MyQuery {
+      client(where: { id: "${id}" }) {
+        name
+        password
+        email
+        id
+      }
+    }
+  `;
+
+  try {
+    const { client } = await graphClient.request(query);
+    if (client.id) {
+      var transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: client.email,
+          pass: client.password,
+        },
+      });
+      var options = {
+        from: `${client.name} <${client.email}>`,
+        to,
+        subject,
+        html,
+        text,
+      };
+      transporter.sendMail(options, function (err, info) {
+        if (err) {
+          console.log(err);
+          res.status(400).send({ message: "Email not sent !" });
+        } else {
+          res.status(200).send({ message: "Email sent successfully" });
+        }
+      });
+    } else {
+      res.status(400).send({ message: "Token not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: "Token not found" });
+  }
 });
 
 app.listen(port, () => {
